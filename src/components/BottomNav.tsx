@@ -15,7 +15,7 @@ export default function BottomNav() {
   const path = usePathname();
   return (
     <div className="pointer-events-none fixed inset-x-0 bottom-0 z-30">
-      <nav className="pointer-events-auto mx-auto mb-3 flex w-[min(26rem,calc(100%-2rem))] items-center gap-1 rounded-pill border border-white/40 bg-surface/55 p-1.5 shadow-[0_8px_32px_rgba(0,0,0,0.18),inset_0_1px_0_rgba(255,255,255,0.5)] backdrop-blur-2xl backdrop-saturate-[1.8] dark:border-white/10 dark:shadow-[0_8px_32px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.08)]">
+      <nav className="pointer-events-auto mx-auto mb-3 flex w-[min(26rem,calc(100%-2rem))] items-center gap-1 rounded-pill border border-white/40 bg-surface/70 p-1.5 shadow-[0_8px_32px_rgba(0,0,0,0.18),inset_0_1px_0_rgba(255,255,255,0.5)] backdrop-blur-md backdrop-saturate-150 transform-gpu [will-change:transform] dark:border-white/10 dark:shadow-[0_8px_32px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.08)]">
         {items.map((it) => {
           const active = path === it.href;
           return (
