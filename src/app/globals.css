@@ -1,0 +1,377 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   REWARDLY — "Punch Card Arcade"
+   The paper loyalty card as an arcade ticket: perforated edges,
+   punch holes, hand-stamped marks, prize-token colours.
+
+   Tokens are stored as raw RGB channels so Tailwind's opacity
+   modifiers (bg-brand/20) work on every colour in the system.
+   In plain CSS, always wrap them: rgb(var(--brand)).
+   ============================================================ */
+
+:root {
+  /* Type — real faces are injected by next/font in layout.tsx.
+     Fallbacks keep the page legible if a face ever fails to load. */
+  --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "DM Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* ---- Light (primary: owners use this at a counter in daylight) ---- */
+  --bg: 244 241 255; /* paper — off-white, biased violet toward the accent */
+  --surface: 255 255 255;
+  --surface-2: 236 231 255;
+  --ink: 20 9 59; /* near-black, violet bias */
+  --ink-2: 91 78 140;
+  --line: 221 211 255;
+  --edge: 20 9 59; /* hard offset-shadow colour */
+
+  --brand: 75 33 245; /* ultraviolet */
+  --brand-ink: 58 21 199;
+  --brand-soft: 231 224 255;
+  --on-brand: 255 255 255;
+
+  --accent: 217 255 61; /* zest — reward / energy / "you won" */
+  --accent-ink: 38 53 10;
+  --accent-soft: 241 255 196;
+
+  --pink: 255 61 139;
+  --pink-soft: 255 224 237;
+  --mango: 255 138 61;
+  --mango-soft: 255 232 214;
+
+  --good: 14 159 82;
+  --good-soft: 217 247 230;
+  --warn: 180 105 14;
+  --risk: 224 27 76;
+  --risk-soft: 255 226 234;
+
+  --grain: 0.035;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: 11 6 32;
+    --surface: 23 16 61;
+    --surface-2: 34 23 80;
+    --ink: 244 241 255;
+    --ink-2: 169 154 222;
+    --line: 47 34 112;
+    --edge: 5 2 15;
+
+    --brand: 139 123 255;
+    --brand-ink: 169 155 255;
+    --brand-soft: 36 26 92;
+    --on-brand: 11 6 32;
+
+    --accent: 217 255 61;
+    --accent-ink: 27 38 6;
+    --accent-soft: 43 52 16;
+
+    --pink: 255 107 167;
+    --pink-soft: 69 20 58;
+    --mango: 255 167 107;
+    --mango-soft: 64 35 15;
+
+    --good: 77 219 146;
+    --good-soft: 16 51 31;
+    --warn: 240 183 63;
+    --risk: 255 97 127;
+    --risk-soft: 64 18 34;
+
+    --grain: 0.05;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: 11 6 32;
+  --surface: 23 16 61;
+  --surface-2: 34 23 80;
+  --ink: 244 241 255;
+  --ink-2: 169 154 222;
+  --line: 47 34 112;
+  --edge: 5 2 15;
+
+  --brand: 139 123 255;
+  --brand-ink: 169 155 255;
+  --brand-soft: 36 26 92;
+  --on-brand: 11 6 32;
+
+  --accent: 217 255 61;
+  --accent-ink: 27 38 6;
+  --accent-soft: 43 52 16;
+
+  --pink: 255 107 167;
+  --pink-soft: 69 20 58;
+  --mango: 255 167 107;
+  --mango-soft: 64 35 15;
+
+  --good: 77 219 146;
+  --good-soft: 16 51 31;
+  --warn: 240 183 63;
+  --risk: 255 97 127;
+  --risk-soft: 64 18 34;
+
+  --grain: 0.05;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background: rgb(var(--bg));
+  color: rgb(var(--ink));
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: rgb(var(--accent));
+  color: rgb(var(--accent-ink));
+}
+
+:focus-visible {
+  outline: 3px solid rgb(var(--brand));
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Fine paper grain — sits above the ground, below all content. */
+.grain {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  opacity: var(--grain);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@layer components {
+  /* ---------- Type roles ---------- */
+  .display {
+    font-family: var(--font-display);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+    line-height: 1;
+  }
+  .label {
+    @apply font-mono text-[11px] uppercase tracking-[0.14em] text-ink-2;
+  }
+  .eyebrow {
+    @apply inline-flex items-center gap-1.5 font-mono text-[11px] font-medium uppercase tracking-[0.18em];
+  }
+
+  /* ---------- Pressable things ----------
+     A hard offset shadow reads as a physical token/button. Pressing it
+     travels the element onto its own shadow. */
+  .btn {
+    @apply inline-flex select-none items-center justify-center gap-2 rounded-pill border-2 border-edge px-5 py-3 font-bold shadow-pop transition-[transform,box-shadow] duration-100;
+  }
+  .btn:active:not(:disabled) {
+    transform: translate(3px, 3px);
+    box-shadow: none;
+  }
+  .btn:disabled {
+    @apply pointer-events-none opacity-45;
+  }
+  .btn-brand {
+    @apply btn bg-brand text-on-brand;
+  }
+  .btn-accent {
+    @apply btn bg-accent text-accent-ink;
+  }
+  .btn-ink {
+    @apply btn bg-ink text-bg;
+  }
+  .btn-ghost {
+    @apply btn border-line bg-surface text-ink shadow-pop-line;
+  }
+  /* Quiet variant for dense/secondary rows — no shadow, no travel. */
+  .btn-flat {
+    @apply inline-flex select-none items-center justify-center gap-2 rounded-pill bg-surface-2 px-4 py-2.5 text-sm font-bold text-ink transition active:scale-[.98] disabled:pointer-events-none disabled:opacity-45;
+  }
+
+  /* ---------- Surfaces ---------- */
+  .card {
+    @apply rounded-lg border-2 border-line bg-surface p-5;
+  }
+  .card-pop {
+    @apply rounded-lg border-2 border-edge bg-surface p-5 shadow-pop-lg;
+  }
+  .card-brand {
+    @apply rounded-lg border-2 border-edge bg-brand p-5 text-on-brand shadow-pop-lg;
+  }
+
+  /* ---------- Ticket ---------- */
+  .ticket {
+    @apply relative rounded-xl border-2 border-edge bg-surface shadow-pop-lg;
+  }
+  /* The tear line carries its own punch holes, so it stays aligned no
+     matter how tall the stub above it grows. */
+  .perf {
+    position: relative;
+    height: 0;
+    border-top: 2px dashed rgb(var(--line));
+  }
+  .perf::before,
+  .perf::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    background: rgb(var(--bg));
+    border: 2px solid rgb(var(--edge));
+    transform: translateY(-50%);
+    z-index: 3;
+  }
+  .perf::before {
+    left: -13px;
+    clip-path: inset(0 0 0 50%);
+  }
+  .perf::after {
+    right: -13px;
+    clip-path: inset(0 50% 0 0);
+  }
+
+  /* ---------- Inputs ---------- */
+  .field {
+    @apply w-full rounded-md border-2 border-line bg-surface px-4 py-3 font-medium text-ink outline-none transition placeholder:text-ink-2/60;
+  }
+  .field:focus {
+    @apply border-brand;
+    box-shadow: 3px 3px 0 0 rgb(var(--brand-soft));
+  }
+
+  /* ---------- Chips ---------- */
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-pill border-2 border-transparent px-2.5 py-1 text-xs font-bold;
+  }
+  .chip-brand {
+    @apply chip border-edge bg-brand text-on-brand;
+  }
+  .chip-accent {
+    @apply chip border-edge bg-accent text-accent-ink;
+  }
+  .chip-pink {
+    @apply chip border-edge bg-pink text-white;
+  }
+  .chip-soft {
+    @apply chip border-line bg-surface-2 text-ink-2;
+  }
+
+  /* ---------- Stamps ----------
+     Filled stamps get a slight rotation so the card looks hand-stamped. */
+  .stamp {
+    @apply grid aspect-square place-items-center rounded-full border-2 text-sm font-bold transition;
+  }
+  .stamp-off {
+    @apply stamp border-dashed border-line bg-surface-2 text-ink-2/70;
+  }
+  .stamp-on {
+    @apply stamp border-edge bg-brand text-on-brand;
+    box-shadow: 2px 2px 0 0 rgb(var(--edge));
+    animation: stamp-pop 0.32s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+  }
+  .stamp-ready {
+    @apply stamp border-edge bg-accent text-accent-ink;
+    box-shadow: 2px 2px 0 0 rgb(var(--edge));
+  }
+
+  /* ---------- Decoration ---------- */
+  .halo {
+    @apply pointer-events-none absolute rounded-full blur-3xl;
+    opacity: 0.55;
+  }
+  .marquee {
+    @apply flex w-max gap-8 whitespace-nowrap;
+    animation: marquee 26s linear infinite;
+  }
+  .tape {
+    @apply inline-block rotate-[-2deg] rounded-sm px-2 py-0.5;
+  }
+}
+
+@keyframes stamp-pop {
+  0% {
+    transform: scale(0.2) rotate(-24deg);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) rotate(var(--tilt, -6deg));
+    opacity: 1;
+  }
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes float-slow {
+  0%,
+  100% {
+    transform: translateY(0) rotate(var(--spin, 0deg));
+  }
+  50% {
+    transform: translateY(-9px) rotate(var(--spin, 0deg));
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgb(var(--brand) / 0.45);
+  }
+  70% {
+    box-shadow: 0 0 0 16px rgb(var(--brand) / 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgb(var(--brand) / 0);
+  }
+}
+
+@keyframes confetti-drop {
+  0% {
+    transform: translateY(-16px) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(180px) rotate(540deg);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

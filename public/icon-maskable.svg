@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#4B21F5"/>
+  <!-- the reward star, stamped -->
+  <g transform="rotate(-8 256 218)">
+    <path d="M256 118l33 67 74 11-54 52 13 74-66-35-66 35 13-74-54-52 74-11z" fill="#D9FF3D"/>
+  </g>
+  <!-- the stamp row: four punched, one to go -->
+  <g fill="#FFFFFF">
+    <circle cx="152" cy="368" r="18"/>
+    <circle cx="204" cy="368" r="18"/>
+    <circle cx="256" cy="368" r="18"/>
+    <circle cx="308" cy="368" r="18"/>
+    <circle cx="360" cy="368" r="18" opacity=".3"/>
+  </g>
+</svg>
